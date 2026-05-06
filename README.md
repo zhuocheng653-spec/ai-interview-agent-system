@@ -1,62 +1,156 @@
-# ai-interview-agent-system
-项目名称：基于多 Agent 的后端系统设计与算法面试强化平台
+# AI Interview Agent System (RAG Enhanced)
 
-在准备大厂（如字节跳动、小米）后端岗位过程中，我构建了一套基于 AI Agent 的学习与实战系统，核心目标是解决传统刷题与八股学习中“反馈滞后、缺乏系统性、无法模拟真实面试”的问题。
+一个基于 **多 Agent + RAG（检索增强生成）** 的后端面试训练系统，模拟大厂面试流程，提供动态追问、评分反馈与知识增强。
 
-1. 核心痛点
-学习割裂：算法、八股、项目经验彼此孤立，无法形成完整知识体系
-缺乏高质量反馈：刷题只能判断对错，无法获得接近面试官水平的深入点评
-面试模拟不足：无法模拟真实面试中的追问、延展问题和系统设计考察
-复杂问题拆解能力弱：面对 MySQL、Redis、系统设计等问题时缺乏结构化思维
-2. 系统核心逻辑流（多 Agent + 长链推理）
+---
 
-该系统采用**多 Agent 协作 + 长链推理（Chain-of-Thought）**架构，核心由以下模块组成：
+## 🚀 项目亮点（核心卖点）
 
-（1）Agent 角色划分
-Interviewer Agent（面试官 Agent）
-负责提出问题（算法 / 八股 / 系统设计）
-根据回答动态生成追问（如 Redis 持久化 → AOF 重写 → 数据一致性）
-Evaluator Agent（评估 Agent）
-对用户回答进行多维度评分（正确性 / 深度 / 表达 / 面试通过概率）
-模拟大厂面试标准（偏字节/小米风格）
-Tutor Agent（教学 Agent）
-基于错误点进行结构化讲解
-自动补充知识图谱（如从 binlog → redo log → 两阶段提交）
-Planner Agent（学习路径规划 Agent）
-根据用户当前水平生成个性化学习路径（60 天冲刺计划）
-动态调整任务（如加大高频题权重）
-（2）长链推理（Chain-of-Thought）
+* ✅ 多 Agent 协作（面试官 / 评估 / 教学 / 规划）
+* ✅ RAG 知识增强（Embedding + 向量检索）
+* ✅ 动态追问（模拟真实面试）
+* ✅ 工程结构清晰（非简单 Demo）
 
-在复杂问题（如“Redis 为什么快”或“事务一致性保证”）中：
+---
 
-Agent 会执行多步推理链：
-拆解问题（数据结构 / IO 模型 / 持久化机制）
-构建知识依赖图
-逐层验证逻辑（避免回答碎片化）
-输出结构化答案（面试可复述）
+## 🧠 项目背景
 
-该过程显著提升用户在复杂系统问题中的表达完整性和逻辑严谨性。
+传统刷题/八股存在：
 
-（3）多 Agent 协作流程
+* 无反馈
+* 无体系
+* 无法模拟真实面试
 
-完整流程如下：
+本项目通过 AI Agent + RAG 构建一个“强化学习闭环”：
 
-Planner Agent 制定学习任务（如：Redis + 高频算法）
-Interviewer Agent 发起模拟面试
-用户作答
-Evaluator Agent 评分 + 指出问题
-Tutor Agent 深度讲解 + 扩展知识
-系统根据表现动态调整后续问题难度
+> 提问 → 回答 → 评估 → 知识补全 → 路径优化
 
-形成一个闭环强化学习系统（Feedback Loop）
+---
 
-3. 项目成果
-构建了覆盖 算法 + MySQL + Redis + 系统设计 的完整训练体系
-实现接近真实面试的动态追问机制
-显著提升复杂问题（如事务一致性、缓存设计）的表达能力
-支持高强度冲刺（如 60 天大厂实习准备）
-4. 技术特点总结
-多 Agent 协同决策（类似分布式系统）
-长链推理增强复杂问题处理能力
-强反馈闭环（比传统刷题效率更高）
-面向真实面试场景优化
+## 🏗️ 系统架构
+
+```
+User
+  ↓
+Interviewer Agent（提问）
+  ↓
+Evaluator Agent（评分）
+  ↓
+Retriever（RAG检索）
+  ↓
+Tutor Agent（知识增强生成）
+  ↓
+Planner Agent（调整学习路径）
+```
+
+---
+
+## 🔍 RAG 机制（重点）
+
+系统引入检索增强生成（RAG）：
+
+1. 将面试知识（Redis / MySQL 等）写入知识库
+2. 使用 embedding 转换为向量
+3. 用户回答时进行语义检索
+4. 将相关知识注入 Prompt
+
+👉 提升回答质量与专业度
+
+---
+
+## 📁 项目结构
+
+```
+ai-interview-agent-system/
+│
+├── agents/
+│   ├── interviewer.py
+│   ├── evaluator.py
+│   ├── tutor.py        # ✅ RAG增强
+│   └── planner.py
+│
+├── core/
+│   ├── orchestrator.py
+│   └── router.py
+│
+├── rag/                # ✅ 新增模块
+│   ├── embedder.py
+│   ├── vector_store.py
+│   ├── retriever.py
+│   └── knowledge_base.txt
+│
+├── memory/
+├── demo/
+│   └── cli_demo.py
+│
+├── main.py
+└── requirements.txt
+```
+
+---
+
+## 💻 快速运行
+
+### 1️⃣ 安装依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2️⃣ 配置 API Key
+
+```bash
+export OPENAI_API_KEY=your_key
+```
+
+### 3️⃣ 运行
+
+```bash
+python main.py
+```
+
+---
+
+## 📊 示例效果
+
+```
+Q: MySQL 如何保证事务一致性？
+
+A: redo log + binlog
+
+系统输出：
+- 评分：7/10
+- 问题：缺少两阶段提交
+- 优化答案：完整结构化回答
+```
+
+---
+
+## 🛠️ 技术栈
+
+* Python
+* OpenAI API
+* Numpy（向量计算）
+* RAG（Embedding + 检索）
+
+---
+
+## 📈 技术总结
+
+> 本项目通过 embedding + 向量检索实现 RAG，将面试知识结构化存储。在回答阶段进行语义召回，并将上下文注入 Prompt，从而提升回答的准确性和深度。
+
+---
+
+
+---
+
+## ⭐ 后续优化方向
+
+* 引入向量数据库（FAISS）
+* 多轮对话记忆（Memory）
+* Web UI（可视化面试系统）
+
+---
+
+如果这个项目对你有帮助，欢迎 Star ⭐
+
